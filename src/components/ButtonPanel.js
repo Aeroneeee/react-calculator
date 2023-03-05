@@ -5,7 +5,7 @@ import Button from './Button';
 
 const ButtonPanel = () => {
   const {
-    value,
+    displayValue,
     handleDigitClick,
     handleOperatorClick,
     handleEqualsClick,
@@ -15,7 +15,7 @@ const ButtonPanel = () => {
   return (
     <div className="button-panel">
       <div className="row">
-        <Button text={`${parseFloat(value) ? 'C' : 'AC'}`} color="light-gray" handleClick={handleOperatorClick} />
+        <Button text={`${parseFloat(displayValue) ? 'C' : 'AC'}`} color="light-gray" handleClick={handleOperatorClick} />
         <Button text="+/-" color="light-gray" handleClick={handleToggleSign} />
         <Button text="%" color="light-gray" handleClick={handleOperatorClick} />
         <Button text="÷" color="orange" handleClick={handleOperatorClick} />

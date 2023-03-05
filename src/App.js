@@ -5,59 +5,65 @@ import Display from './components/Display';
 
 import './App.css';
 
+// constants
+const ADDITION = '+';
+const SUBTRACTION = '-';
+const MULTIPLICATION = 'x';
+const DIVISION = '/';
+
 const Calculator = () => {
-  const [value, setValue] = useState('0');
-  const [memory, setMemory] = useState(null);
-  const [operator, setOperator] = useState(null);
+  const [displayValue, setDisplayValue] = useState('0');
+  const [storedValue, setStoredValue] = useState(null);
+  const [selectedOperator, setSelectedOperator] = useState(null);
 
   const handleDigitClick = useCallback((digit) => {
-    if (value === '0') {
-      setValue(digit.toString());
+    if (displayValue === '0') {
+      setDisplayValue(digit.toString());
     } else {
-      setValue(value + digit.toString());
+      setDisplayValue(displayValue + digit.toString());
     }
-  }, [value]);
+  }, [displayValue]);
 
   const handleOperatorClick = useCallback((nextOperator) => {
-    if (operator !== null) {
-      if (operator === '+') {
-        setMemory(memory + parseFloat(value));
-      } else if (operator === '-') {
-        setMemory(memory - parseFloat(value));
-      } else if (operator === 'x') {
-        setMemory(memory * parseFloat(value));
-      } else if (operator === '/') {
-        setMemory(memory / parseFloat(value));
+    if (selectedOperator !== null) {
+      if (selectedOperator === ADDITION) {
+        setStoredValue(storedValue + parseFloat(displayValue));
+      } else if (selectedOperator === SUBTRACTION) {
+        setStoredValue(storedValue - parseFloat(displayValue));
+      } else if (selectedOperator === MULTIPLICATION) {
+        setStoredValue(storedValue * parseFloat(displayValue));
+      } else if (selectedOperator === DIVISION) {
+        setStoredValue(storedValue / parseFloat(displayValue));
       }
     } else {
-      setMemory(parseFloat(value));
+      setStoredValue(parseFloat(displayValue));
     }
-    setValue('0');
-    setOperator(nextOperator);
-  }, [value, operator, memory]);
+    setDisplayValue('0');
+    setSelectedOperator(nextOperator);
+  }, [displayValue, selectedOperator, storedValue]);
 
   const handleEqualsClick = useCallback(() => {
-    if (operator === '+') {
-      setValue((memory + parseFloat(value)).toString());
-    } else if (operator === '-') {
-      setValue((memory - parseFloat(value)).toString());
-    } else if (operator === 'x') {
-      setValue((memory * parseFloat(value)).toString());
-    } else if (operator === '/') {
-      setValue((memory / parseFloat(value)).toString());
+    if (selectedOperator === ADDITION) {
+      setDisplayValue((storedValue + parseFloat(displayValue)).toString());
+    } else if (selectedOperator === SUBTRACTION) {
+      setDisplayValue((storedValue - parseFloat(displayValue)).toString());
+    } else if (selectedOperator === MULTIPLICATION) {
+      setDisplayValue((storedValue * parseFloat(displayValue)).toString());
+    } else if (selectedOperator === DIVISION) {
+      setDisplayValue((storedValue / parseFloat(displayValue)).toString());
     }
-    setMemory(null);
-    setOperator(null);
-  }, [value, operator, memory]);
+    setStoredValue(null);
+    setSelectedOperator(null);
+  }, [displayValue, selectedOperator, storedValue]);
 
   const handleToggleSign = () => {
-    setValue((parseFloat(value) * -1).toString())
+    setDisplayValue((parseFloat(displayValue) * -1).toString())
   }
 
   const handleClearClick = useCallback(() => {
-    setValue('0');
-    setMemory(null);
-    setOperator(null);
+    setDisplayValue('0');
+    setStoredValue(null);
+    setSelectedOperator(null);
   }, []);
 
   useEffect(() => {
@@ -71,14 +77,14 @@ const Calculator = () => {
     const { key } = event;
     if (/\d/.test(key)) {
       handleDigitClick(parseInt(key, 10));
-    } else if (key === '+') {
-      handleOperatorClick('+');
-    } else if (key === '-') {
-      handleOperatorClick('-');
+    } else if (key === ADDITION) {
+      handleOperatorClick(ADDITION);
+    } else if (key === SUBTRACTION) {
+      handleOperatorClick(SUBTRACTION);
     } else if (key === '*') {
-      handleOperatorClick('x');
-    } else if (key === '/') {
-      handleOperatorClick('/');
+      handleOperatorClick(MULTIPLICATION);
+    } else if (key === DIVISION) {
+      handleOperatorClick(DIVISION);
     } else if (key === 'Enter' || key === '=') {
       handleEqualsClick();
     } else if (key === 'Escape') {
@@ -88,9 +94,9 @@ const Calculator = () => {
 
   return (
     <CalculatorContext.Provider value={{
-      value,
-      memory,
-      operator,
+      displayValue,
+      storedValue,
+      selectedOperator,
       handleDigitClick,
       handleOperatorClick,
       handleEqualsClick,
